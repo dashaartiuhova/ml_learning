@@ -118,7 +118,7 @@ def encode_categorical_features(
     X_val = pd.concat([X_val, encoded_val_df], axis=1)
 
     return X_train, X_val, encoder
-from typing import Tuple, Optional
+from typing import Tuple, Optional,List
 import pandas as pd
 from sklearn.preprocessing import OneHotEncoder, MinMaxScaler
 
@@ -191,10 +191,11 @@ def preprocess_data(
 
 
 def preprocess_test_data(
+    drop_cols: List[str],
     df_test: pd.DataFrame,
     feature_names,
     scaler=None,
-    encoder=None,
+    encoder=None
 ):
     """
     Preprocess test set using fitted scaler and encoder from training data.
@@ -204,7 +205,7 @@ def preprocess_test_data(
 
     # Drop columns that training used
     if "Surname" in X_test.columns:
-        X_test = X_test.drop(columns=["Surname"])
+        X_test = X_test.drop(columns=drop_cols)
 
     # Keep only the same features as training
     numeric_cols = [col for col in feature_names if col in X_test.select_dtypes(include="number").columns]
